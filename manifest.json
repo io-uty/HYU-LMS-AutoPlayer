@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "HY-Play",
+  "version": "5.2.0",
+  "description": "한양대학교 LMS 강의 자동 재생 도우미",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://learning.hanyang.ac.kr/*",
+    "https://hycms.hanyang.ac.kr/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://learning.hanyang.ac.kr/*"],
+      "js": ["content.js"],
+      "css": ["styles/panel.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://hycms.hanyang.ac.kr/*"],
+      "js": ["iframe-player.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

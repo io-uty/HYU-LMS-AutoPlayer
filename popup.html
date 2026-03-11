@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HY-Play</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --hy-blue: #003876;
+      --hy-blue-mid: #005BAC;
+      --hy-blue-light: #1A7FD4;
+      --hy-accent: #FFD700;
+      --hy-white: #FFFFFF;
+      --hy-gray: #F4F7FB;
+      --hy-text: #1C2B3A;
+      --hy-sub: #6B85A0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 320px;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--hy-gray);
+      color: var(--hy-text);
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, var(--hy-blue) 0%, var(--hy-blue-mid) 100%);
+      padding: 20px 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 60px;
+      width: 80px; height: 80px;
+      background: rgba(255,215,0,0.08);
+      border-radius: 50%;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--hy-accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+    .logo-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--hy-white);
+      letter-spacing: 1px;
+    }
+    .logo-text span {
+      color: var(--hy-accent);
+    }
+    .subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.5px;
+      padding-left: 46px;
+    }
+
+    /* ── Status Badge ── */
+    .status-bar {
+      padding: 12px 20px;
+      background: white;
+      border-bottom: 1px solid #E2EAF4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      margin-right: 7px;
+      transition: background 0.3s;
+    }
+    .status-dot.active { background: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+    .status-dot.inactive { background: #EF4444; }
+    .status-label {
+      font-size: 12px;
+      color: var(--hy-sub);
+      display: flex; align-items: center;
+    }
+    .status-label strong {
+      color: var(--hy-text);
+      font-weight: 500;
+    }
+    .version-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      background: var(--hy-gray);
+      color: var(--hy-sub);
+      padding: 2px 7px;
+      border-radius: 20px;
+      border: 1px solid #DDE8F5;
+    }
+
+    /* ── Body ── */
+    .body {
+      padding: 16px 20px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--hy-sub);
+      margin-bottom: 10px;
+    }
+
+    /* ── Info Cards ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 14px 12px;
+      border: 1px solid #E2EAF4;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--hy-blue-light);
+      border-radius: 2px 0 0 2px;
+    }
+    .info-card.accent::before { background: var(--hy-accent); }
+    .info-card.green::before { background: #22C55E; }
+
+    .card-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--hy-blue);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .card-val.accent { color: #B8860B; }
+    .card-val.green { color: #15803D; }
+    .card-label {
+      font-size: 10px;
+      color: var(--hy-sub);
+      font-weight: 500;
+    }
+
+    /* ── Toggle Options ── */
+    .options-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #E2EAF4;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid #F0F5FB;
+      transition: background 0.15s;
+    }
+    .option-row:last-child { border-bottom: none; }
+    .option-row:hover { background: var(--hy-gray); }
+
+    .option-info { display: flex; flex-direction: column; gap: 1px; }
+    .option-name { font-size: 13px; font-weight: 500; color: var(--hy-text); }
+    .option-desc { font-size: 10px; color: var(--hy-sub); }
+
+    /* Toggle Switch */
+    .toggle { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0;
+      background: #D1DAE8;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 3px; top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.25s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider { background: var(--hy-blue-mid); }
+    input:checked + .slider::before { transform: translateX(16px); }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 11px 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--hy-blue-mid), var(--hy-blue-light));
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,91,172,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0,91,172,0.4); }
+    .btn-secondary {
+      background: white;
+      color: var(--hy-blue-mid);
+      border: 1.5px solid #C8D9EE;
+    }
+    .btn-secondary:hover { background: var(--hy-gray); }
+
+    .btn-full {
+      width: 100%;
+      background: linear-gradient(135deg, var(--hy-blue) 0%, var(--hy-blue-mid) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 3px 12px rgba(0,56,118,0.35);
+    }
+    .btn-full:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,56,118,0.45); }
+    .btn-full:active { transform: translateY(0); }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 10px 20px 14px;
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 10px;
+      color: #B0BFCF;
+    }
+    .footer-text a { color: var(--hy-blue-light); text-decoration: none; }
+    .footer-text a:hover { text-decoration: underline; }
+
+    /* ── Notification ── */
+    .notif {
+      position: fixed;
+      bottom: 12px; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--hy-blue);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      white-space: nowrap;
+      z-index: 999;
+    }
+    .notif.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">▶</div>
+      <div class="logo-text">HY<span>-Play</span></div>
+    </div>
+    <div class="subtitle">한양대학교 LMS 자동 재생 도우미</div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-label">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">확인 중...</span>
+    </div>
+    <div class="version-badge">v1.0.0</div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Stats -->
+    <div class="section-label">현재 세션</div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="card-val" id="queueCount">0</div>
+        <div class="card-label">대기 강의 수</div>
+      </div>
+      <div class="info-card green">
+        <div class="card-val green" id="doneCount">0</div>
+        <div class="card-label">완료된 강의</div>
+      </div>
+      <div class="info-card accent" style="grid-column: 1/-1;">
+        <div class="card-val accent" id="progressVal">—</div>
+        <div class="card-label">현재 진도율</div>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="section-label">재생 설정</div>
+    <div class="options-card">
+      <div class="option-row">
+        <div class="option-info">
+          <div class="option-name">자동 다음 강의 이동</div>
+          <div class="option-desc">영상 종료 시 자동으로 다음 강의 재생</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="autoNext" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="option-row">
+        <div class="option-info">
+          <div class="option-name">완료 처리 자동 클릭</div>
+          <div class="option-desc">수강 완료 버튼 자동 클릭</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="autoComplete" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="option-row">
+        <div class="option-info">
+          <div class="option-name">진도율 패널 표시</div>
+          <div class="option-desc">오른쪽 패널에 진도율 표시</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="showProgress" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnPanel">
+        📋 패널 열기
+      </button>
+      <button class="btn btn-secondary" id="btnClear">
+        🗑 목록 초기화
+      </button>
+    </div>
+
+    <button class="btn-full" id="btnGo">
+      🚀 &nbsp;한양대 LMS 열기
+    </button>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-text">HY-Play · 한양대학교 비공식 도구</div>
+  </div>
+
+  <div class="notif" id="notif"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
